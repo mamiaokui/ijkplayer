@@ -21,7 +21,7 @@ APP_PLATFORM := android-L
 APP_ABI := x86
 NDK_TOOLCHAIN_VERSION=4.9
 APP_PIE := false
-APP_STL := stlport_shared
+APP_STL := gnustl_static#stlport_shared
 
 APP_CFLAGS := -O3 -Wall -pipe \
     -ffast-math \
