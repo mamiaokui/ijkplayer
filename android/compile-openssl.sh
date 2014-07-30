@@ -13,28 +13,29 @@ if [ -z "$ANDROID_NDK" -o -z "$ANDROID_SDK" ]; then
 fi
 
 # try to detect NDK version
-FF_NDK_REL=$(grep -o '^r[0-9]*.*' $ANDROID_NDK/RELEASE.TXT 2>/dev/null|cut -b2-)
+#FF_NDK_REL=$(grep -o '^r[0-9]*.*' $ANDROID_NDK/RELEASE.TXT 2>/dev/null|cut -b2-)
+FF_NDK_REL=$(grep -o "^r[0-9]*" $ANDROID_NDK/RELEASE.TXT | grep -o "[0-9]*")
 case "$FF_NDK_REL" in
-    9?*)
+    10?*)
         # we don't use 4.4.3 because it doesn't handle threads correctly.
-        if test -d ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.8
+        if test -d ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.9
         # if gcc 4.8 is present, it's there for all the archs (x86, mips, arm)
         then
             echo "NDKr$FF_NDK_REL detected"
         else
-            echo "You need the NDKr9 or later"
+            echo "You need the NDKr10 or later"
             exit 1
         fi
     ;;
     7|8|*)
-        echo "You need the NDKr9 or later"
+        echo "You need the NDKr10 or later"
         exit 1
     ;;
 esac
 
 FF_BUILD_ROOT=`pwd`
-FF_ANDROID_PLATFORM=android-9
-FF_GCC_VER=4.8
+FF_ANDROID_PLATFORM=android-L
+FF_GCC_VER=4.9
 
 
 

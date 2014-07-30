@@ -25,28 +25,29 @@ if [ -z "$FF_ARCH" ]; then
 fi
 
 # try to detect NDK version
-FF_NDK_REL=$(grep -o '^r[0-9]*.*' $ANDROID_NDK/RELEASE.TXT 2>/dev/null|cut -b2-)
+#FF_NDK_REL=$(grep -o '^r[0-9]*.*' $ANDROID_NDK/RELEASE.TXT 2>/dev/null|cut -b2-)
+FF_NDK_REL=$(grep -o "^r[0-9]*" $ANDROID_NDK/RELEASE.TXT | grep -o "[0-9]*")
 case "$FF_NDK_REL" in
-    9?*)
+    10)
         # we don't use 4.4.3 because it doesn't handle threads correctly.
-        if test -d ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.8
+        if test -d ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.9
         # if gcc 4.8 is present, it's there for all the archs (x86, mips, arm)
         then
             echo "NDKr$FF_NDK_REL detected"
         else
-            echo "You need the NDKr9 or later"
+            echo "You need the NDKr10 or later"
             exit 1
         fi
     ;;
     7|8|*)
-        echo "You need the NDKr9 or later"
+        echo "You need the NDKr10 or later"
         exit 1
     ;;
 esac
 
 FF_BUILD_ROOT=`pwd`
-FF_ANDROID_PLATFORM=android-9
-FF_GCC_VER=4.8
+FF_ANDROID_PLATFORM=android-L
+FF_GCC_VER=4.9
 
 
 
@@ -64,7 +65,7 @@ FF_DEP_LIBS=
 FF_ASM_OBJ_DIR=
 
 #----- armv7a begin -----
-if [ "$FF_ARCH" == "armv7a" ]; then
+if [ "$FF_ARCH" = "armv7a" ]; then
     FF_BUILD_NAME=ffmpeg-armv7a
     FF_BUILD_NAME_OPENSSL=openssl-armv7a
     FF_SOURCE=$FF_BUILD_ROOT/$FF_BUILD_NAME
@@ -81,7 +82,7 @@ if [ "$FF_ARCH" == "armv7a" ]; then
 
     FF_ASM_OBJ_DIR="libavutil/arm/*.o libavcodec/arm/*.o libswresample/arm/*.o"
 
-elif [ "$FF_ARCH" == "armv5" ]; then
+elif [ "$FF_ARCH" = "armv5" ]; then
     FF_BUILD_NAME=ffmpeg-armv5
     FF_BUILD_NAME_OPENSSL=openssl-armv5
     FF_SOURCE=$FF_BUILD_ROOT/$FF_BUILD_NAME
@@ -96,7 +97,7 @@ elif [ "$FF_ARCH" == "armv5" ]; then
 
     FF_ASM_OBJ_DIR="libavutil/arm/*.o libavcodec/arm/*.o libswresample/arm/*.o"
 
-elif [ "$FF_ARCH" == "x86" ]; then
+elif [ "$FF_ARCH" = "x86" ]; then
     FF_BUILD_NAME=ffmpeg-x86
     FF_BUILD_NAME_OPENSSL=openssl-x86
     FF_SOURCE=$FF_BUILD_ROOT/$FF_BUILD_NAME
@@ -134,7 +135,7 @@ UNAMES=$(uname -s)
 UNAMESM=$(uname -sm)
 echo "build on $UNAMESM"
 FF_MAKE_TOOLCHAIN_FLAGS="--install-dir=$FF_TOOLCHAIN_PATH"
-if [ "$UNAMES" == "Darwin" ]; then
+if [ "$UNAMES" = "Darwin" ]; then
     FF_MAKE_TOOLCHAIN_FLAGS="$FF_MAKE_TOOLCHAIN_FLAGS --system=darwin-x86_64"
     FF_MAKE_FLAG=-j`sysctl -n machdep.cpu.thread_count`
 fi
@@ -162,6 +163,7 @@ fi
 echo "\n--------------------"
 echo "[*] check ffmpeg env"
 echo "--------------------"
+echo $PATH
 export PATH=$FF_TOOLCHAIN_PATH/bin:$PATH
 #export CC="ccache ${FF_CROSS_PREFIX}-gcc"
 export CC="${FF_CROSS_PREFIX}-gcc"
@@ -186,8 +188,8 @@ FF_CFLAGS="-O3 -Wall -pipe \
 #FF_CFLAGS="$FF_CFLAGS -finline-limit=300"
 
 export COMMON_FF_CFG_FLAGS=
-source $FF_BUILD_ROOT/../config/module.sh
-
+#source $FF_BUILD_ROOT/../config/module.sh
+. $FF_BUILD_ROOT/../config/module.sh
 
 #--------------------
 # with openssl
@@ -255,14 +257,14 @@ $CC -lm -lz -shared --sysroot=$FF_SYSROOT -Wl,--no-undefined -Wl,-z,noexecstack 
     $FF_DEP_LIBS \
     -o $FF_PREFIX/libijkffmpeg.so
 
-function mysedi() {
-    f=$1
-    exp=$2
-    n=`basename $f`
-    cp $f /tmp/$n
-    sed $exp /tmp/$n > $f
-    rm /tmp/$n
-}
+if [ "$BASH_VERSION" = '' ]; then
+    echo "This is dash."
+    . $FF_BUILD_ROOT/tools/myutils-dash.sh
+else
+    echo "This is bash."
+    . $FF_BUILD_ROOT/tools/myutils-bash.sh
+fi
+
 
 echo "\n--------------------"
 echo "[*] create files for shared ffmpeg"
