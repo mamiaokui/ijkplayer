@@ -136,6 +136,6 @@ public interface IMediaPlayer {
     @Deprecated
     public abstract void setWakeMode(Context context, int mode);
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @TargetApi(17)
     public abstract void setSurface(Surface surface);
 }
