@@ -32,10 +32,11 @@ public class VideoPlayerActivity extends Activity {
 	private View mBufferingIndicator;
 	private MediaController mMediaController;
 
-	private String mVideoPath;
+	
 
-	/*-
-	mVideoPath = "http://v.iask.com/v_play_ipad.php?vid=99979978";
+	
+	 private String mVideoPath = "http://v.iask.com/v_play_ipad.php?vid=99979978";
+	/*
 	mVideoPath = "http://gslb.bestvcdn.com/gslb/url/Bestv/live/live/kknews/workflow1.m3u8";
 	mVideoPath = "http://iosvideo.kankanews.com/2012/07/20/h264_450k_mp4_SHYiShu201207…67640_aac.ssm/h264_450k_mp4_SHYiShu20120720210930854798181167640_aac.m3u8";
 	mVideoPath = "http://video1.kksmg.com/rendition/201302/88000/39/104342962523078658/104342967891787778/r104342967891787778.m3u8";
@@ -97,7 +98,7 @@ public class VideoPlayerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_player);
 
-		mVideoPath = "http://live.gslb.letv.com/gslb?stream_id=btv6_800&tag=live&ext=m3u8";
+		//mVideoPath = "http://live.gslb.letv.com/gslb?stream_id=btv6_800&tag=live&ext=m3u8";
 
 		Intent intent = getIntent();
 		String intentAction = intent.getAction();

@@ -30,7 +30,7 @@ FF_NDK_REL=$(grep -o "^r[0-9]*" $ANDROID_NDK/RELEASE.TXT | grep -o "[0-9]*")
 case "$FF_NDK_REL" in
     10)
         # we don't use 4.4.3 because it doesn't handle threads correctly.
-        if test -d ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.9
+        if test -d ${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.8
         # if gcc 4.8 is present, it's there for all the archs (x86, mips, arm)
         then
             echo "NDKr$FF_NDK_REL detected"
@@ -46,8 +46,8 @@ case "$FF_NDK_REL" in
 esac
 
 FF_BUILD_ROOT=`pwd`
-FF_ANDROID_PLATFORM=android-L
-FF_GCC_VER=4.9
+FF_ANDROID_PLATFORM=android-14
+FF_GCC_VER=4.8
 
 
 

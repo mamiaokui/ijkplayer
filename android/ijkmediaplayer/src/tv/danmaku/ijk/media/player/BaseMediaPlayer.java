@@ -51,7 +51,7 @@ public abstract class BaseMediaPlayer implements IMediaPlayer {
         return;
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @TargetApi(17)
     @Override
     public void setSurface(Surface surface) {
     }
